@@ -190,14 +190,14 @@ function drawPrima(){
   var cats=order.map(function(k){return S[k];});
   chP.setOption({
    animationDuration:600,
-   grid:{left:8,right:16,top:44,bottom:44,containLabel:true},
+   grid:{left:8,right:16,top:48,bottom:44,containLabel:true},
    tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'rgba(34,16,51,.96)',borderWidth:0,padding:[8,12],textStyle:{color:'#fff',fontSize:12.5},
      formatter:function(ps){var s=cats[ps[0].dataIndex];return '<b>'+s.name+'</b><br/>Prima: <b>'+money(s.prima)+' / mes</b><br/>'+(s.name==='Cartera actual'?'referencia':'vs actual: <b>'+pct(s.vpri)+'</b>');}},
    xAxis:{type:'category',data:cats.map(function(s){return s.short;}),axisTick:{show:false},axisLine:{lineStyle:{color:'#e3d6ef'}},axisLabel:{color:INK,fontSize:11.5,fontWeight:'bold',lineHeight:14,interval:0}},
-   yAxis:{type:'value',max:2.4,axisLabel:{show:false},axisLine:{show:false},axisTick:{show:false},splitLine:{lineStyle:{color:'#f4eff9'}}},
+   yAxis:{type:'value',max:2.6,axisLabel:{show:false},axisLine:{show:false},axisTick:{show:false},splitLine:{lineStyle:{color:'#f4eff9'}}},
    series:[{type:'bar',barWidth:'46%',
      data:cats.map(function(s){var onc=(s===S[cur]);return {value:s.prima,itemStyle:{color:onc?grad(GOLDL,GOLDD):grad(PUR2,PUR),borderRadius:[10,10,0,0],shadowBlur:onc?18:10,shadowColor:onc?'rgba(184,134,11,.34)':'rgba(74,33,104,.16)',shadowOffsetY:6}};}),
-     markLine:{silent:true,symbol:'none',lineStyle:{type:'dashed',color:'#b79ccf',width:1.6},data:[{yAxis:BASEPRIMA}],label:{show:true,position:'insideStartTop',formatter:'Actual  $2,03',color:'#8a6fb0',fontSize:10.5,fontWeight:'bold'}},
+     markLine:{silent:true,symbol:'none',lineStyle:{type:'dashed',color:'#b79ccf',width:1.6},data:[{yAxis:BASEPRIMA}],label:{show:false}},
      label:{show:true,position:'top',distance:10,formatter:function(p){var s=cats[p.dataIndex];return '{a|'+money(s.prima)+'}\n{'+(s.vpri<0?'g':'m')+'|'+(s.name==='Cartera actual'?'referencia':pct(s.vpri))+'}';},
        rich:{a:{color:INK,fontSize:16,fontWeight:'bold',lineHeight:19,align:'center'},g:{color:GRN,fontSize:11,fontWeight:'bold',lineHeight:14,align:'center'},m:{color:GRAY,fontSize:11,fontWeight:'bold',lineHeight:14,align:'center'}}}}]
   });
