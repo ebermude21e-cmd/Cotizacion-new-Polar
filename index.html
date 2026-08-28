@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Propuesta Empresas Polar — Cotización</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@6.1.0/dist/echarts.min.js"></script>
+<style>
+:root{
+  --pur:#6A2C91; --pur2:#9B5FBE; --purd:#4A2168; --gold:#C9A227; --goldd:#B8860B; --goldl:#E0BD55;
+  --ink:#221033; --gray:#6b6577; --line:#ece4f3; --bg:#faf7fd; --card:#ffffff;
+  --grn:#2E7D32; --red:#C8102E;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,Arial,sans-serif;}
+body{background:linear-gradient(165deg,#f3ecfa 0%,var(--bg) 45%,#fff 100%);color:var(--ink);min-height:100vh;padding:0 0 40px;}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px;}
+.top{background:linear-gradient(115deg,var(--purd),var(--pur) 55%,#7d34a8);color:#fff;padding:26px 0 22px;box-shadow:0 14px 40px rgba(74,33,104,.28);}
+.top .wrap{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.brand{font-size:12px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:#e6d4f4;margin-bottom:9px;}
+.htitle{font-size:29px;font-weight:800;line-height:1.12;max-width:770px;}
+.hsub{font-size:13.5px;color:#e9dcf5;margin-top:8px;max-width:730px;line-height:1.5;}
+.sabadge{background:rgba(255,255,255,.14);border:1.5px solid rgba(255,255,255,.35);border-radius:14px;padding:12px 18px;text-align:center;}
+.sabadge .l{font-size:10px;font-weight:700;letter-spacing:1.5px;color:#e6d4f4;text-transform:uppercase;}
+.sabadge .v{font-size:26px;font-weight:800;line-height:1.1;margin-top:2px;}
+.hero{margin-top:24px;background:linear-gradient(120deg,#fff,#fbf6ff);border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:16px;padding:19px 24px;box-shadow:0 12px 34px rgba(106,44,145,.09);}
+.hero h2{font-size:20px;font-weight:800;color:var(--purd);line-height:1.25;}
+.hero p{font-size:13.5px;color:var(--gray);margin-top:7px;line-height:1.55;max-width:970px;}
+.hero b{color:var(--pur);}
+.selWrap{margin-top:20px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px 17px;box-shadow:0 10px 28px rgba(106,44,145,.07);}
+.selLbl{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--gray);margin-bottom:11px;}
+.btns{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;}
+.btn{border:1.6px solid var(--line);background:#fff;border-radius:13px;padding:13px 14px;cursor:pointer;text-align:left;transition:.18s;}
+.btn:hover{border-color:var(--pur2);transform:translateY(-1px);}
+.btn .bt{font-size:14px;font-weight:800;color:var(--ink);}
+.btn .bs{font-size:11.5px;color:var(--gray);margin-top:3px;}
+.btn.act{border-color:transparent;background:linear-gradient(135deg,var(--gold),var(--goldd));box-shadow:0 9px 22px rgba(201,162,39,.34);}
+.btn.act .bt,.btn.act .bs{color:#fff;}
+.btn.actP{border-color:transparent;background:linear-gradient(135deg,var(--pur2),var(--pur));box-shadow:0 9px 22px rgba(106,44,145,.30);}
+.btn.actP .bt,.btn.actP .bs{color:#fff;}
+/* comparativo */
+.comp{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:8px;box-shadow:0 12px 32px rgba(106,44,145,.09);display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:stretch;}
+.cside{border-radius:14px;padding:18px 22px;display:flex;flex-direction:column;justify-content:center;}
+.cside.left{background:linear-gradient(135deg,#f7f0fc,#fbf7fe);border:1px solid #ecdff7;}
+.cside.right{background:linear-gradient(135deg,var(--pur),var(--purd));color:#fff;}
+.cside .ck{font-size:10.5px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;margin-bottom:10px;}
+.cside.left .ck{color:var(--pur);} .cside.right .ck{color:#e9d7f6;}
+.cmetric{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:5px 0;}
+.cmetric .ml{font-size:11.5px;font-weight:600;color:var(--gray);}
+.cside.right .cmetric .ml{color:#dcc9ee;}
+.cmetric .mv{font-size:23px;font-weight:800;line-height:1;}
+.cside.left .mv{color:var(--ink);} .cside.right .mv{color:#fff;}
+.cmid{display:flex;flex-direction:column;justify-content:center;gap:12px;padding:0 12px;min-width:180px;}
+.delta{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 14px;text-align:center;box-shadow:0 6px 16px rgba(106,44,145,.06);}
+.delta .dl{font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--gray);}
+.delta .dv{font-size:22px;font-weight:800;line-height:1.05;margin-top:2px;}
+.delta .ds{font-size:11px;font-weight:700;margin-top:1px;}
+.up{color:var(--pur);} .good{color:var(--grn);} .flat{color:var(--gray);} .bad{color:var(--red);}
+.arrowRow{font-size:11px;color:var(--gray);text-align:center;font-weight:700;letter-spacing:1px;}
+/* charts */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px 10px;box-shadow:0 10px 28px rgba(106,44,145,.07);}
+.ct{font-size:14px;font-weight:800;color:var(--purd);letter-spacing:.2px;}
+.cts{font-size:11.5px;color:var(--gray);margin:2px 0 8px;}
+.chart{height:330px;width:100%;}
+.legend{display:flex;gap:16px;margin:2px 0 6px;}
+.lg{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--ink);}
+.dot{width:11px;height:11px;border-radius:3px;}
+.tblCard{margin-top:20px;}
+table{border-collapse:collapse;width:100%;font-size:13px;}
+th{background:var(--pur);color:#fff;font-weight:700;text-align:right;padding:9px 14px;font-size:11.5px;}
+th:first-child{text-align:left;border-radius:8px 0 0 0;} th:last-child{border-radius:0 8px 0 0;}
+td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--line);}
+td:first-child{text-align:left;font-weight:700;}
+tr.selRow td{background:#fbf3dd;} tr.baseRow td{background:#f6eefb;}
+.pill{display:inline-block;font-size:11px;font-weight:800;padding:2px 9px;border-radius:20px;}
+.pill.down{background:#e7f4e8;color:var(--grn);} .pill.flat{background:#eee9f2;color:var(--gray);} .pill.pop{background:#efe7f6;color:var(--pur);}
+.foot{margin-top:22px;font-size:11.5px;color:var(--gray);text-align:center;line-height:1.5;}
+@media(max-width:900px){.grid2{grid-template-columns:1fr;}.comp{grid-template-columns:1fr;}.btns{grid-template-columns:1fr 1fr;}.htitle{font-size:23px;}}
+</style></head>
+<body>
+<div class="top"><div class="wrap">
+  <div>
+    <div class="brand">Seguros La Fe · Empresas Polar</div>
+    <div class="htitle">Propuesta de Cotización — Población de Trabajadores y Familiares</div>
+    <div class="hsub">Impacto de ampliar la cobertura a los familiares sobre la prima mensual por persona. Toda comparación se hace contra la cartera actual.</div>
+  </div>
+  <div class="sabadge"><div class="l">Suma Asegurada</div><div class="v">$2.750</div></div>
+</div></div>
+
+<div class="wrap">
+  <div class="hero"><h2 id="heroH"></h2><p id="heroP"></p></div>
+
+  <div class="selWrap">
+    <div class="selLbl">Elija el escenario a comparar contra la cartera actual</div>
+    <div class="btns">
+      <button class="btn" id="b_base" onclick="sel('base')"><div class="bt">Cartera actual</div><div class="bs">39.829 personas</div></button>
+      <button class="btn" id="b_sc" onclick="sel('sc')"><div class="bt">Solo Cónyuges</div><div class="bs">+4.649 personas</div></button>
+      <button class="btn" id="b_ch" onclick="sel('ch')"><div class="bt">+ Cónyuges e Hijos</div><div class="bs">+14.535 personas</div></button>
+      <button class="btn" id="b_plus" onclick="sel('plus')"><div class="bt">+ Plus (grupo completo)</div><div class="bs">+25.220 personas</div></button>
+    </div>
+  </div>
+
+  <!-- COMPARATIVO -->
+  <div class="comp">
+    <div class="cside left">
+      <div class="ck">Cartera actual</div>
+      <div class="cmetric"><span class="ml">Población total</span><span class="mv">39.829</span></div>
+      <div class="cmetric"><span class="ml">Prima mensual / persona</span><span class="mv">$2,03</span></div>
+    </div>
+    <div class="cmid">
+      <div class="arrowRow">▶ VARIACIÓN ▶</div>
+      <div class="delta"><div class="dl">Crecimiento población</div><div class="dv up" id="d_pop">+36,5%</div><div class="ds up" id="d_pop2">+14.535 personas</div></div>
+      <div class="delta"><div class="dl">Variación prima individual</div><div class="dv good" id="d_pri">−13,79%</div><div class="ds good" id="d_pri2">−$0,28 / mes</div></div>
+    </div>
+    <div class="cside right">
+      <div class="ck" id="c_name">+ Cónyuges e Hijos</div>
+      <div class="cmetric"><span class="ml">Población total</span><span class="mv" id="c_pop">54.364</span></div>
+      <div class="cmetric"><span class="ml">Prima mensual / persona</span><span class="mv" id="c_pri">$1,75</span></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="ct">Crecimiento de la cobertura vs variación de la prima</div>
+      <div class="cts">Variación % frente a la cartera actual (base 0) · el escenario elegido se resalta</div>
+      <div class="legend"><div class="lg"><span class="dot" style="background:#8B4FB0"></span>Crecimiento población</div><div class="lg"><span class="dot" style="background:#C9A227"></span>Variación prima</div></div>
+      <div id="cVar" class="chart" style="height:290px"></div>
+    </div>
+    <div class="card">
+      <div class="ct">Prima mensual por trabajador o familiar</div>
+      <div class="cts">Línea punteada = prima de la cartera actual ($2,03) · % vs actual</div>
+      <div id="cPrima" class="chart" style="height:320px"></div>
+    </div>
+  </div>
+
+  <div class="card tblCard">
+    <div class="ct">Resumen comparativo (SA $2.750)</div>
+    <table>
+      <tr><th>Escenario</th><th>Población total</th><th>Crecimiento población</th><th>Prima mensual / persona</th><th>Variación prima</th></tr>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="foot">
+    Prima mensual por persona (trabajador o familiar) para una suma asegurada de $2.750, con el descuento aprobado ya incluido. Todas las variaciones se calculan contra la cartera actual de 39.829 personas ($2,03/mes).<br>
+    Seguros La Fe · Propuesta Empresas Polar · uso confidencial.
+  </div>
+</div>
+
+<script>
+var PUR='#6A2C91',PUR2='#9B5FBE',PURD='#4A2168',GOLD='#C9A227',GOLDD='#B8860B',GOLDL='#E0BD55',INK='#221033',GRAY='#6b6577',GRN='#2E7D32',POPC='#8B4FB0';
+var BASEPOP=39829, BASEPRIMA=2.03;
+var S={
+  base:{name:'Cartera actual',short:'Cartera\nactual',pop:39829,prima:2.03},
+  sc:{name:'Solo Cónyuges',short:'Solo\nCónyuges',pop:44478,prima:1.98},
+  ch:{name:'+ Cónyuges e Hijos',short:'+ Cónyuges\ne Hijos',pop:54364,prima:1.75},
+  plus:{name:'+ Plus (grupo completo)',short:'+ Plus\ncompleto',pop:65049,prima:2.03}
+};
+['sc','ch','plus','base'].forEach(function(k){var s=S[k];s.dpop=s.pop-BASEPOP;s.gpop=(s.pop/BASEPOP-1)*100;s.vpri=(s.prima/BASEPRIMA-1)*100;s.dpri=s.prima-BASEPRIMA;});
+var order=['base','sc','ch','plus'], amp=['sc','ch','plus'];
+var cur='ch';
+var chVar=echarts.init(document.getElementById('cVar'));
+var chP=echarts.init(document.getElementById('cPrima'));
+function nf(n){return Math.round(n).toLocaleString('es-VE');}
+function money(n){return '$'+n.toLocaleString('es-VE',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function moneySigned(n){return (n<0?'−':'+')+'$'+Math.abs(n).toLocaleString('es-VE',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function pct(n){return (n>0?'+':(n<0?'−':''))+Math.abs(n).toLocaleString('es-VE',{minimumFractionDigits:2,maximumFractionDigits:2})+'%';}
+function grad(a,b){return new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:a},{offset:1,color:b}]);}
+
+function drawVar(){
+  var idx=amp.indexOf(cur);
+  function op(i){return (idx<0||i===idx)?1:0.30;}
+  var pobData=amp.map(function(k,i){return {value:+S[k].gpop.toFixed(2),itemStyle:{color:grad(PUR2,PUR),borderRadius:[6,6,0,0],opacity:op(i)}};});
+  var priData=amp.map(function(k,i){var v=+S[k].vpri.toFixed(2);return {value:v,itemStyle:{color:grad(GOLDL,GOLDD),borderRadius:v>=0?[6,6,0,0]:[0,0,6,6],opacity:op(i)}};});
+  chVar.setOption({
+   animationDuration:600,
+   grid:{left:8,right:14,top:20,bottom:44,containLabel:true},
+   tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'rgba(34,16,51,.96)',borderWidth:0,padding:[8,12],textStyle:{color:'#fff',fontSize:12.5},
+     formatter:function(ps){var k=amp[ps[0].dataIndex];var s=S[k];return '<b>'+s.name+'</b><br/>Población: <b>'+nf(s.pop)+'</b> ('+pct(s.gpop)+')<br/>Prima: <b>'+money(s.prima)+'</b> ('+pct(s.vpri)+')';}},
+   xAxis:{type:'category',data:amp.map(function(k){return S[k].short;}),axisTick:{show:false},axisLine:{lineStyle:{color:'#e3d6ef'}},axisLabel:{color:INK,fontSize:11.5,fontWeight:'bold',lineHeight:14,interval:0}},
+   yAxis:{type:'value',axisLabel:{formatter:'{value}%',color:GRAY,fontSize:10.5},axisLine:{show:false},axisTick:{show:false},splitLine:{lineStyle:{color:'#f4eff9'}}},
+   series:[
+     {name:'Crecimiento población',type:'bar',barGap:'12%',barWidth:'34%',data:pobData,z:3,
+       label:{show:true,position:'top',formatter:function(p){return pct(amp.map(function(k){return S[k].gpop;})[p.dataIndex]);},color:PUR,fontSize:11.5,fontWeight:'bold'}},
+     {name:'Variación prima',type:'bar',barWidth:'34%',data:priData,z:3,
+       label:{show:true,position:'bottom',formatter:function(p){return pct(amp.map(function(k){return S[k].vpri;})[p.dataIndex]);},color:GOLDD,fontSize:11.5,fontWeight:'bold'}},
+     {type:'line',markLine:{silent:true,symbol:'none',lineStyle:{color:'#c9b6de',width:1.4},data:[{yAxis:0}],label:{show:false}}}
+   ]
+  });
+}
+function drawPrima(){
+  var cats=order.map(function(k){return S[k];});
+  chP.setOption({
+   animationDuration:600,
+   grid:{left:8,right:16,top:44,bottom:44,containLabel:true},
+   tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'rgba(34,16,51,.96)',borderWidth:0,padding:[8,12],textStyle:{color:'#fff',fontSize:12.5},
+     formatter:function(ps){var s=cats[ps[0].dataIndex];return '<b>'+s.name+'</b><br/>Prima: <b>'+money(s.prima)+' / mes</b><br/>'+(s.name==='Cartera actual'?'referencia':'vs actual: <b>'+pct(s.vpri)+'</b>');}},
+   xAxis:{type:'category',data:cats.map(function(s){return s.short;}),axisTick:{show:false},axisLine:{lineStyle:{color:'#e3d6ef'}},axisLabel:{color:INK,fontSize:11.5,fontWeight:'bold',lineHeight:14,interval:0}},
+   yAxis:{type:'value',max:2.4,axisLabel:{show:false},axisLine:{show:false},axisTick:{show:false},splitLine:{lineStyle:{color:'#f4eff9'}}},
+   series:[{type:'bar',barWidth:'46%',
+     data:cats.map(function(s){var onc=(s===S[cur]);return {value:s.prima,itemStyle:{color:onc?grad(GOLDL,GOLDD):grad(PUR2,PUR),borderRadius:[10,10,0,0],shadowBlur:onc?18:10,shadowColor:onc?'rgba(184,134,11,.34)':'rgba(74,33,104,.16)',shadowOffsetY:6}};}),
+     markLine:{silent:true,symbol:'none',lineStyle:{type:'dashed',color:'#b79ccf',width:1.6},data:[{yAxis:BASEPRIMA}],label:{show:true,position:'insideStartTop',formatter:'Actual  $2,03',color:'#8a6fb0',fontSize:10.5,fontWeight:'bold'}},
+     label:{show:true,position:'top',distance:10,formatter:function(p){var s=cats[p.dataIndex];return '{a|'+money(s.prima)+'}\n{'+(s.vpri<0?'g':'m')+'|'+(s.name==='Cartera actual'?'referencia':pct(s.vpri))+'}';},
+       rich:{a:{color:INK,fontSize:16,fontWeight:'bold',lineHeight:19,align:'center'},g:{color:GRN,fontSize:11,fontWeight:'bold',lineHeight:14,align:'center'},m:{color:GRAY,fontSize:11,fontWeight:'bold',lineHeight:14,align:'center'}}}}]
+  });
+}
+function fillTable(){
+  var h='';
+  order.forEach(function(k){var s=S[k];
+    var cls=k==='base'?'baseRow':(k===cur?'selRow':'');
+    var gp=k==='base'?'—':'<span class="pill pop">'+pct(s.gpop)+'</span>';
+    var vp=k==='base'?'referencia':'<span class="pill '+(s.vpri<0?'down':'flat')+'">'+pct(s.vpri)+'</span>';
+    h+='<tr class="'+cls+'"><td>'+s.name+'</td><td>'+nf(s.pop)+'</td><td>'+gp+'</td><td>'+money(s.prima)+'</td><td>'+vp+'</td></tr>';
+  });
+  document.getElementById('tbody').innerHTML=h;
+}
+function sel(k){
+  cur=k;
+  order.forEach(function(x){var b=document.getElementById('b_'+x);b.classList.remove('act','actP');if(x===k)b.classList.add(x==='base'?'actP':'act');});
+  var s=S[k];
+  var isBase=(k==='base');
+  document.getElementById('c_name').textContent=isBase?'Cartera actual (base)':s.name;
+  document.getElementById('c_pop').textContent=nf(s.pop);
+  document.getElementById('c_pri').textContent=money(s.prima);
+  var dpop=document.getElementById('d_pop'),dpop2=document.getElementById('d_pop2');
+  dpop.textContent=isBase?'—':pct(s.gpop); dpop2.textContent=isBase?'sin variación':'+'+nf(s.dpop)+' personas';
+  var dpri=document.getElementById('d_pri'),dpri2=document.getElementById('d_pri2');
+  dpri.textContent=isBase?'—':pct(s.vpri); dpri2.textContent=isBase?'sin variación':(moneySigned(s.dpri)+' / mes');
+  dpri.className='dv '+(s.vpri<0?'good':(s.vpri>0?'bad':'flat'));
+  dpri2.className='ds '+(s.vpri<0?'good':(s.vpri>0?'bad':'flat'));
+  var H=document.getElementById('heroH'),P=document.getElementById('heroP');
+  if(isBase){H.textContent='Cartera actual: 39.829 personas a $2,03 por mes.';
+    P.innerHTML='Punto de partida. Elija una ampliación para ver, contra esta base, <b>cuánto crece la población</b> y <b>cómo varía la prima por persona</b>.';}
+  else if(k==='plus'){H.textContent='+25.220 personas (+63,3%) y la prima por persona se mantiene igual: $2,03.';
+    P.innerHTML='Incluir a <b>todo el grupo familiar</b> lleva la cartera a 65.049 vidas —un <b>63,3% más de cobertura</b>— y la prima por persona queda <b>exactamente igual</b> (0,00%).';}
+  else if(k==='ch'){H.textContent='+14.535 personas (+36,5%) y la prima por persona baja 13,79%.';
+    P.innerHTML='Sumar <b>cónyuges e hijos</b> amplía la cobertura un <b>36,5%</b> y a la vez <b>baja la prima</b> por persona de $2,03 a $1,75.';}
+  else{H.textContent='+4.649 personas (+11,7%) y la prima por persona baja 2,46%.';
+    P.innerHTML='Sumar a los <b>cónyuges</b> amplía la cobertura un <b>11,7%</b> y reduce la prima por persona de $2,03 a $1,98.';}
+  drawVar();drawPrima();fillTable();
+}
+window.addEventListener('resize',function(){chVar.resize();chP.resize();});
+sel('ch');
+</script>
+</body></html>
